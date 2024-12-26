@@ -71,14 +71,6 @@ jobs:
       - name: Copy Build artifact in deb-build branch
         run: |
           git branch
-          ls
-          git stash -u
-          ls
-          git checkout dev-build
-          ls
-          git rm -rf Build
-          git checkout develop --  Build
-          ls
           git add -f .
-          git commit -m "add new build" || echo "No changes to commit"
-          git push origin dev-build
+          git commit -m "new build"
+          git push origin develop
