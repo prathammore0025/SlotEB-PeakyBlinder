@@ -2,12 +2,12 @@ name: Unity WebGL Automatic Build 👽✨🚀
 
 on:
   push:
-    branches:    
+    branches:
       - 'develop'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -27,14 +27,13 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-
+      # Git LFS Pull
       - name: Git LFS Pull
         run: |
+          git lfs install
           git lfs pull
-          git add .
-          ls
-          git reset --hard
-          
+          echo "Git LFS files pulled."
+
       # Cache Unity Library
       - name: Cache Library directory
         uses: actions/cache@v3
@@ -48,6 +47,7 @@ jobs:
         run: |
           echo "Library directory contents:"
           ls -al Library || echo "Library directory does not exist"
+
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
@@ -57,20 +57,25 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
-          buildsPath: ./Build
+          buildsPath: ./Builds
           allowDirtyBuild: true
 
-      # Output: Artifact
+      # Upload Build Artifact
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: artifact
-          path: ./Build/*
+          name: UnityBuild
+          path: ./Builds/
 
       # Deployment
-      - name: Copy Build artifact in deb-build branch
+      - name: Push Build artifact to deb-build branch
         run: |
-          git branch
+          git config --global user.email "prathamesh@underpinservices.com"
+          git config --global user.name "Prathm0025"
+          git checkout -b deb-build || git checkout deb-build
+          cp -r ./Builds/* ./  # Copy build files to root
           git add -f .
-          git commit -m "new build"
-          git push origin develop
+          git commit -m "Updated build artifacts"
+          git push origin deb-build --force
+        with:
+          token: ${{ secrets.PAT }}
