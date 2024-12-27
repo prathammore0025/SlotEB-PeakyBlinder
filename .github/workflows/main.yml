@@ -69,6 +69,8 @@ jobs:
 
       # Deployment
       - name: Push Build artifact to deb-build branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           git config --global user.email "prathamesh@underpinservices.com"
           git config --global user.name "Prathm0025"
@@ -76,4 +78,4 @@ jobs:
           cp -r ./Builds/* ./  # Copy build files to root
           git add -f .
           git commit -m "Updated build artifacts"
-          git push origin deb-build --force
+          git push origin dev-build --force
