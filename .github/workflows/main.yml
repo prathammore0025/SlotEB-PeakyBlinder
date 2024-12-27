@@ -22,6 +22,10 @@ jobs:
 
     steps:
       # Checkout (without LFS)
+      - name: sudo user
+        run: |
+          sudo -i
+          
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -66,7 +70,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
         run: |
-          chmod -R u+w .
           git stash || echo "No changes to stash" # Stash only if there are changes
           git checkout dev-build
           git config user.name "Prathm0025"
@@ -106,7 +109,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          chmod -R u+w .
           git add -f Builds
           git commit -m "new build"
           git stash -u
