@@ -48,6 +48,39 @@ jobs:
           echo "Library directory contents:"
           ls -al Library || echo "Library directory does not exist"
 
+      - name: Ensure build-artifacts Branch Exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          git fetch origin
+          if git show-ref --verify --quiet refs/remotes/origin/dev-build; then
+            echo "Branch 'dev-build' exists."
+            git checkout dev-build
+          else
+            echo "Branch 'dev-build' does not exist. Creating it."
+            git checkout -b dev-build
+            git push --set-upstream origin dev-build
+          fi
+
+      - name: Push updated package.json to dev-build branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+        run: |
+          git stash || echo "No changes to stash" # Stash only if there are changes
+          git checkout dev-build
+          git config user.name "Prathm0025"
+          git config user.email "prathamesh@underpinservices.com"
+          if [ -f "./index.html Build" ]; then
+            git rm -rf .
+          else
+            echo "File ./index.js and Build folder does not exist, skipping removal."
+          fi
+          git add -f .
+          git commit -m "remove old artifacts" || echo "No changes to commit"
+          git push --force origin dev-build
+          git stash pop || echo "No local changes to pop" # Handle no stash scenario
+          git checkout develop
+
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
@@ -72,9 +105,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git config --global user.email "prathamesh@underpinservices.com"
-          git config --global user.name "Prathm0025"
-          git checkout -b deb-build || git checkout deb-build
+          git add -f Builds
+          git commit -m "new build"
+          git checkout dev-build
+          git checkout develop -- Builds 
           cp -r ./Builds/* ./  # Copy build files to root
           git add -f .
           git commit -m "Updated build artifacts"
