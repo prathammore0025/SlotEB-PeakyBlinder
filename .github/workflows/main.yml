@@ -108,7 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          sudo rm -rf Assets
+          sudo rm -rf Assets Library
           git add -f Builds
           git add -f .
           git commit -m "new build"
