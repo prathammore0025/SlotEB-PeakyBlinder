@@ -109,7 +109,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           git add -f Builds
-          git stash push --keep-index
+          git rm -rf .
           git add -f .
           git commit -m "new build"
           git checkout dev-build
