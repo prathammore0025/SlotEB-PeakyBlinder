@@ -70,7 +70,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
         run: |
-          git stash || echo "No changes to stash" # Stash only if there are changes
           git checkout dev-build
           git config user.name "Prathm0025"
           git config user.email "prathamesh@underpinservices.com"
@@ -109,9 +108,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git add -f Builds
+          git add -A
           git commit -m "new build"
-          git stash -u
           git checkout dev-build
           git checkout develop -- Builds 
           cp -r ./Builds/* ./  # Copy build files to root
