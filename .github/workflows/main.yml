@@ -109,7 +109,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           sudo rm -rf Assets
-          git add -A
+          git add Builds
+          git add -f .
           git commit -m "new build"
           git checkout dev-build
           git checkout develop -- ./Builds 
