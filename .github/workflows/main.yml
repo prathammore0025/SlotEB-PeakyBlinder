@@ -108,6 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
+          sudo chmod -R u+w .
           git add -f Builds
           git rm -rf .
           git add -f .
