@@ -108,10 +108,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
+          sudo rm -rf Assets
           git add -A
           git commit -m "new build"
           git checkout dev-build
-          git checkout develop -- Builds 
+          git checkout develop -- ./Builds 
           cp -r ./Builds/* ./  # Copy build files to root
           git rm -rf Builds
           git add -f .
