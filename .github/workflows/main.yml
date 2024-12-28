@@ -108,14 +108,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          sudo chmod -R u+w .
+          sudo chown -R $USER:$USER .
           git add -f Builds
-          git rm -rf .
+          git stash push --keep-index
           git add -f .
           git commit -m "new build"
           git checkout dev-build
           git checkout develop -- ./Builds 
-          cp -r ./Builds/* ./  # Copy build files to root
+          cp -r ./Builds/WebGL/WebGL/* ./  # Copy build files to root
           git rm -rf Builds
           git add -f .
           git commit -m "Updated build artifacts"
