@@ -108,8 +108,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          sudo rm -rf Assets Library
           git add -f Builds
+          git stash push --keep-index
           git add -f .
           git commit -m "new build"
           git checkout dev-build
